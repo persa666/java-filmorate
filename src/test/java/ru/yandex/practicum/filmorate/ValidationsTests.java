@@ -44,9 +44,8 @@ public class ValidationsTests {
 
     @Test
     void realeseDateValidatorBadTest2() {
-        Film film = new Film();
         Film film2 =
-                testRestTemplate.postForEntity("http://localhost:8080/films", film, Film.class).getBody();
-        Assertions.assertNotEquals(film, film2);
+                testRestTemplate.postForEntity("http://localhost:8080/films", null, Film.class).getBody();
+        Assertions.assertNotEquals(null, film2);
     }
 }
