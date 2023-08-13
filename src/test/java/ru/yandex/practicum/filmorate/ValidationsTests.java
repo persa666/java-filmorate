@@ -17,7 +17,7 @@ public class ValidationsTests {
     private TestRestTemplate testRestTemplate;
 
     @Test
-    void RealeseDateValidatorNormalTest() {
+    void realeseDateValidatorNormalTest() {
         Film film = new Film();
         film.setName("Фильм");
         film.setDescription("Описание фильма");
@@ -30,7 +30,7 @@ public class ValidationsTests {
     }
 
     @Test
-    void RealeseDateValidatorBadTest() {
+    void realeseDateValidatorBadTest() {
         Film film = new Film();
         film.setName("Фильм");
         film.setDescription("Описание фильма");
@@ -43,7 +43,7 @@ public class ValidationsTests {
     }
 
     @Test
-    void RealeseDateValidatorBadTest2() {
+    void realeseDateValidatorBadTest2() {
         Film film = new Film();
         Film film2 =
                 testRestTemplate.postForEntity("http://localhost:8080/films", film, Film.class).getBody();
