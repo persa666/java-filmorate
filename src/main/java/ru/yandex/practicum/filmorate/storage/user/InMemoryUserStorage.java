@@ -1,23 +1,20 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
 
     public List<User> findAll() {
-        List<User> currentUserList = new ArrayList<>();
-        if (!users.isEmpty()) {
-            currentUserList.addAll(users.values());
-        }
-        return currentUserList;
+        return List.copyOf(users.values());
     }
 
     public User create(User user) {
@@ -31,14 +28,15 @@ public class InMemoryUserStorage implements UserStorage {
 
     public User replace(User user) {
         if (!users.containsKey(user.getId())) {
-            return null;
+            throw new NonExistentUserException("Пользователя с таким id не существует.");
         } else {
             users.replace(user.getId(), user);
         }
-        return users.get(user.getId());
+        return user;
     }
 
     public User findById(Integer id) {
-        return users.getOrDefault(id, null);
+        return Optional.ofNullable(users.get(id))
+                .orElseThrow(() -> new NonExistentUserException("Пользователя с таким id не существует."));
     }
 }

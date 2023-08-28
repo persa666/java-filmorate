@@ -20,13 +20,13 @@ public class User {
     private String login;
     @PastOrPresent
     private LocalDate birthday;
-    private Set<Integer> friends = new HashSet<>();
+    private Set<Integer> friendsIds = new HashSet<>();
 
     public void addFriend(int id) {
-        friends.add(id);
+        friendsIds.add(id);
     }
 
     public void removeFriend(int id) {
-        friends.remove(id);
+        friendsIds.remove(id);
     }
 }

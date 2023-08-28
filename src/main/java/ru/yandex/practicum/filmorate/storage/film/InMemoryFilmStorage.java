@@ -1,23 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NonExistentFilmException;
+import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
 
     public List<Film> findAll() {
-        List<Film> currentFilmsList = new ArrayList<>();
-        if (!films.isEmpty()) {
-            currentFilmsList.addAll(films.values());
-        }
-        return currentFilmsList;
+        return List.copyOf(films.values());
     }
 
     public Film create(Film film) {
@@ -28,7 +26,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Film replace(Film film) {
         if (!films.containsKey(film.getId())) {
-            return null;
+            throw new NonExistentUserException("Фильма с таким id не существует.");
         } else {
             films.replace(film.getId(), film);
         }
@@ -36,6 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public Film findFilmById(int id) {
-        return films.getOrDefault(id, null);
+        return Optional.ofNullable(films.get(id))
+                .orElseThrow(() -> new NonExistentFilmException("Фильма с таким id не существует."));
     }
 }

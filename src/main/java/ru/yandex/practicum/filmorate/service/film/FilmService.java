@@ -1,13 +1,11 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IncorrectCountException;
 import ru.yandex.practicum.filmorate.exception.IncorrectIdException;
 import ru.yandex.practicum.filmorate.exception.NonExistentFilmException;
-import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
@@ -17,15 +15,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserService userService;
-
-    @Autowired
-    public FilmService(FilmStorage filmStorage, UserService userService) {
-        this.filmStorage = filmStorage;
-        this.userService = userService;
-    }
 
     public List<Film> findAll() {
         return filmStorage.findAll();
@@ -36,44 +29,28 @@ public class FilmService {
     }
 
     public Film replace(Film film) {
-        Film replaceFilm = filmStorage.replace(film);
-        if (replaceFilm == null) {
-            throw new NonExistentFilmException("Фильма с таким id не существует.");
-        }
-        return replaceFilm;
+        return filmStorage.replace(film);
     }
 
-    public Film getFilmById(int id) {
-        Film film = filmStorage.findFilmById(id);
-        if (film == null) {
-            throw new NonExistentFilmException("Фильма с таким id не существует.");
-        } else {
-            return film;
-        }
+    public Film getFilmById(Integer id) {
+        checkNumberForCorrect(id);
+        return filmStorage.findFilmById(id);
     }
 
-    public Film putLike(int id, int userId) {
+    public Film putLike(Integer id, Integer userId) {
+        checkNumberForCorrect(id);
+        checkNumberForCorrect(userId);
         Film film = filmStorage.findFilmById(id);
-        User user = userService.findUserById(userId);
-        if (film == null) {
-            throw new NonExistentFilmException("Фильма с таким id не существует.");
-        }
-        if (user == null) {
-            throw new NonExistentUserException("Пользователя с таким id не существует.");
-        }
+        userService.findUserById(userId);
         film.putLike(userId);
         return filmStorage.replace(film);
     }
 
-    public Film removeLike(int id, int userId) {
+    public Film removeLike(Integer id, Integer userId) {
+        checkNumberForCorrect(id);
+        checkNumberForCorrect(userId);
         Film film = filmStorage.findFilmById(id);
-        User user = userService.findUserById(userId);
-        if (film == null) {
-            throw new NonExistentFilmException("Фильма с таким id не существует.");
-        }
-        if (user == null) {
-            throw new NonExistentUserException("Пользователя с таким id не существует.");
-        }
+        userService.findUserById(userId);
         if (film.getLikes().contains(userId)) {
             film.removeLike(userId);
             return filmStorage.replace(film);
@@ -85,6 +62,12 @@ public class FilmService {
     public List<Film> findPopularFilms(String count) {
         List<Film> popularFilms = new ArrayList<>();
         Set<Film> sortPopularFilms = new TreeSet<>(filmStorage.findAll());
+        if (count == null) {
+            throw new IncorrectCountException("Параметр count равен null.");
+        }
+        if (count.isBlank()) {
+            throw new IncorrectCountException("Параметр count пустой.");
+        }
         try {
             int counter = Integer.parseInt(count);
             if (counter < 0) {
@@ -125,5 +108,14 @@ public class FilmService {
             throw new IncorrectCountException("Параметр count должен быть числом.");
         }
         return popularFilms;
+    }
+
+    private void checkNumberForCorrect(Integer id) {
+        if (id == null) {
+            throw new IncorrectIdException("Параметр равен null.");
+        }
+        if (id <= 0) {
+            throw new NonExistentFilmException("Параметр должен быть положительным числом.");
+        }
     }
 }
