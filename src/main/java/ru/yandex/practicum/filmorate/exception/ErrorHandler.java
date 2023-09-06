@@ -1,0 +1,42 @@
+package ru.yandex.practicum.filmorate.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ErrorHandler {
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleCountOverflow(final IncorrectCountException e) {
+        return new ErrorResponse(
+                "Ошибка с параметром count.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIdOverflow(final IncorrectIdException e) {
+        return new ErrorResponse(
+                "Ошибка с параметром id.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleFilmNotFound(final NonExistentFilmException e) {
+        return new ErrorResponse(
+                "Ошибка с поиском фильма.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFound(final NonExistentUserException e) {
+        return new ErrorResponse(
+                "Ошибка с поиском пользователя.", e.getMessage()
+        );
+    }
+}
