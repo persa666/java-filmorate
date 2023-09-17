@@ -1,6 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Схема БД_ласт](https://github.com/persa666/java-filmorate/assets/119011873/b969bd95-39b6-4b80-b2f7-391dd089c883)
+![бдласт](https://github.com/persa666/java-filmorate/assets/119011873/f855c6ce-6dc0-45b2-a819-4d41d4e93edb)
 
 1) Table film (Таблица "film"):
 
@@ -9,7 +9,6 @@ film_name - Название фильма.
 film_description - Описание фильма.
 film_release_date - Дата выпуска фильма.
 film_duration - Продолжительность фильма.
-genre_id - Внешний ключ, связанный с таблицей genre, указывает на жанр фильма.
 film_rating - Поле с перечислением (Enum_rating) оценка фильма.
 
 2) Table user (Таблица "user"):
