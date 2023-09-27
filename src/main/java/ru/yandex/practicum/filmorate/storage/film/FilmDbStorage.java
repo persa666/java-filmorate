@@ -85,7 +85,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.setMpa(jdbcTemplate.queryForObject(sqlFromMpa, this::makeMpa, film.getMpa().getId()));
             }
             return film;
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new IncorrectFilmException("Неверные поля у film.");
         }
     }
