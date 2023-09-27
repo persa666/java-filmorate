@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -36,18 +38,20 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film findFilmById(@PathVariable Integer id) {
+    public Film findFilmById(@PathVariable @Valid @NonNull @Positive Integer id) {
         return filmService.getFilmById(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public Film putLike(@PathVariable Integer id, @PathVariable Integer userId) {
+    public Film putLike(@PathVariable @Valid @NonNull @Positive Integer id,
+                        @PathVariable @Valid @NonNull @Positive Integer userId) {
         log.debug("Получен запрос PUT /films/{id}/like/{userId}.");
         return filmService.putLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
+    public Film removeLike(@PathVariable @Valid @NonNull @Positive Integer id,
+                           @PathVariable @Valid @NonNull @Positive Integer userId) {
         return filmService.removeLike(id, userId);
     }
 
