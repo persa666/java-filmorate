@@ -28,13 +28,14 @@ public class User {
 
     }
 
-    public User (String name, String email, String login, LocalDate birthday, Set<Integer> friendsIds) {
+    public User(String name, String email, String login, LocalDate birthday, Set<Integer> friendsIds) {
         this.name = name;
         this.email = email;
         this.login = login;
         this.birthday = birthday;
         this.friendsIds = friendsIds;
     }
+
     public User(String name, int id, String email, String login, LocalDate birthday, Set<Integer> friendsIds) {
         this.id = id;
         this.name = name;
