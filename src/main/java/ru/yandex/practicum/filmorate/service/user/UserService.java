@@ -37,10 +37,8 @@ public class UserService {
         checkNumberForCorrect(id);
         checkNumberForCorrect(friendId);
         User user = userStorage.findById(id);
-        User userFriend = userStorage.findById(friendId);
+        userStorage.findById(friendId);
         user.addFriend(friendId);
-        userFriend.addFriend(id);
-        userStorage.replace(userFriend);
         return userStorage.replace(user);
     }
 

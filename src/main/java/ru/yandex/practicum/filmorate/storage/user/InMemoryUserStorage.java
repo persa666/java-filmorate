@@ -13,10 +13,12 @@ import java.util.Optional;
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
 
+    @Override
     public List<User> findAll() {
         return List.copyOf(users.values());
     }
 
+    @Override
     public User create(User user) {
         user.setId(users.size() + 1);
         if (user.getName().isBlank()) {
@@ -26,6 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    @Override
     public User replace(User user) {
         if (!users.containsKey(user.getId())) {
             throw new NonExistentUserException("Пользователя с таким id не существует.");
@@ -35,6 +38,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    @Override
     public User findById(Integer id) {
         return Optional.ofNullable(users.get(id))
                 .orElseThrow(() -> new NonExistentUserException("Пользователя с таким id не существует."));

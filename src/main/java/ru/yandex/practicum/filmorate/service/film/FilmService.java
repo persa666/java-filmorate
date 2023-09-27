@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IncorrectCountException;
 import ru.yandex.practicum.filmorate.exception.IncorrectIdException;
 import ru.yandex.practicum.filmorate.exception.NonExistentFilmException;
+import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -55,7 +56,7 @@ public class FilmService {
             film.removeLike(userId);
             return filmStorage.replace(film);
         } else {
-            throw new IncorrectIdException("Пользователь с таким id не ставил лайк этому фильму.");
+            throw new NonExistentUserException("Пользователь с таким id не ставил лайк этому фильму.");
         }
     }
 

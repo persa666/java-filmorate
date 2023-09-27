@@ -10,20 +10,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
 
+    @Override
     public List<Film> findAll() {
         return List.copyOf(films.values());
     }
 
+    @Override
     public Film create(Film film) {
         film.setId(films.size() + 1);
         films.put(film.getId(), film);
         return film;
     }
 
+    @Override
     public Film replace(Film film) {
         if (!films.containsKey(film.getId())) {
             throw new NonExistentUserException("Фильма с таким id не существует.");
@@ -33,6 +36,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
     public Film findFilmById(int id) {
         return Optional.ofNullable(films.get(id))
                 .orElseThrow(() -> new NonExistentFilmException("Фильма с таким id не существует."));
