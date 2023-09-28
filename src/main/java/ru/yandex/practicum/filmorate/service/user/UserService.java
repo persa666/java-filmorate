@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.IncorrectIdException;
-import ru.yandex.practicum.filmorate.exception.NonExistentFilmException;
 import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -29,24 +27,17 @@ public class UserService {
     }
 
     public User findUserById(Integer id) {
-        checkNumberForCorrect(id);
         return userStorage.findById(id);
     }
 
     public User addToFriends(Integer id, Integer friendId) {
-        checkNumberForCorrect(id);
-        checkNumberForCorrect(friendId);
         User user = userStorage.findById(id);
-        User userFriend = userStorage.findById(friendId);
+        userStorage.findById(friendId);
         user.addFriend(friendId);
-        userFriend.addFriend(id);
-        userStorage.replace(userFriend);
         return userStorage.replace(user);
     }
 
     public User removeFromFriends(Integer id, Integer friendId) {
-        checkNumberForCorrect(id);
-        checkNumberForCorrect(friendId);
         User user = userStorage.findById(id);
         User userFriend = userStorage.findById(friendId);
         if (user.getFriendsIds().contains(friendId)) {
@@ -60,7 +51,6 @@ public class UserService {
     }
 
     public List<User> findListFriends(Integer id) {
-        checkNumberForCorrect(id);
         List<User> userFriends = new ArrayList<>();
         User user = userStorage.findById(id);
         for (Integer elem : user.getFriendsIds()) {
@@ -70,8 +60,6 @@ public class UserService {
     }
 
     public List<User> findCommonFriends(Integer id, Integer otherId) {
-        checkNumberForCorrect(id);
-        checkNumberForCorrect(otherId);
         List<User> commonFriends = new ArrayList<>();
         User user = userStorage.findById(id);
         User userFriend = userStorage.findById(otherId);
@@ -87,14 +75,5 @@ public class UserService {
             }
         }
         return commonFriends;
-    }
-
-    private void checkNumberForCorrect(Integer id) {
-        if (id == null) {
-            throw new IncorrectIdException("Параметр равен null.");
-        }
-        if (id <= 0) {
-            throw new NonExistentFilmException("Параметр должен быть положительным числом.");
-        }
     }
 }

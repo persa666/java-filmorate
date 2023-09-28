@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -35,28 +37,31 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findUserById(@PathVariable Integer id) {
+    public User findUserById(@PathVariable @Valid @NonNull @Positive Integer id) {
         return userService.findUserById(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public User addToFriends(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public User addToFriends(@PathVariable @Valid @NonNull @Positive Integer id,
+                             @PathVariable @Valid @NonNull @Positive Integer friendId) {
         log.debug("Получен запрос PUT /users/{id}/friends/{friendId}");
         return userService.addToFriends(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public User removeFromFriends(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public User removeFromFriends(@PathVariable @Valid @NonNull @Positive Integer id,
+                                  @PathVariable @Valid @NonNull @Positive Integer friendId) {
         return userService.removeFromFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> findListFriends(@PathVariable Integer id) {
+    public List<User> findListFriends(@PathVariable @Valid @NonNull @Positive Integer id) {
         return userService.findListFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> findCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public List<User> findCommonFriends(@PathVariable @Valid @NonNull @Positive Integer id,
+                                        @PathVariable @Valid @NonNull @Positive Integer otherId) {
         return userService.findCommonFriends(id, otherId);
     }
 }

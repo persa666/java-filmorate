@@ -39,4 +39,36 @@ public class ErrorHandler {
                 "Ошибка с поиском пользователя.", e.getMessage()
         );
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleGenreNotFound(final NonExistentGenreException e) {
+        return new ErrorResponse(
+                "Ошибка с поиском жанра.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleMpaNotFound(final NonExistentMpaException e) {
+        return new ErrorResponse(
+                "Ошибка с поиском рейтинга.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUserIncorrect(final IncorrectUserException e) {
+        return new ErrorResponse(
+                "Ошибка с созданием пользователя.", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleFilmIncorrect(final IncorrectFilmException e) {
+        return new ErrorResponse(
+                "Ошибка с созданием фильма.", e.getMessage()
+        );
+    }
 }

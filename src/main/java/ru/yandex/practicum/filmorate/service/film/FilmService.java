@@ -3,8 +3,7 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.IncorrectCountException;
-import ru.yandex.practicum.filmorate.exception.IncorrectIdException;
-import ru.yandex.practicum.filmorate.exception.NonExistentFilmException;
+import ru.yandex.practicum.filmorate.exception.NonExistentUserException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -33,13 +32,11 @@ public class FilmService {
     }
 
     public Film getFilmById(Integer id) {
-        checkNumberForCorrect(id);
+        //checkNumberForCorrect(id);
         return filmStorage.findFilmById(id);
     }
 
     public Film putLike(Integer id, Integer userId) {
-        checkNumberForCorrect(id);
-        checkNumberForCorrect(userId);
         Film film = filmStorage.findFilmById(id);
         userService.findUserById(userId);
         film.putLike(userId);
@@ -47,15 +44,13 @@ public class FilmService {
     }
 
     public Film removeLike(Integer id, Integer userId) {
-        checkNumberForCorrect(id);
-        checkNumberForCorrect(userId);
         Film film = filmStorage.findFilmById(id);
         userService.findUserById(userId);
         if (film.getLikes().contains(userId)) {
             film.removeLike(userId);
             return filmStorage.replace(film);
         } else {
-            throw new IncorrectIdException("Пользователь с таким id не ставил лайк этому фильму.");
+            throw new NonExistentUserException("Пользователь с таким id не ставил лайк этому фильму.");
         }
     }
 
@@ -108,14 +103,5 @@ public class FilmService {
             throw new IncorrectCountException("Параметр count должен быть числом.");
         }
         return popularFilms;
-    }
-
-    private void checkNumberForCorrect(Integer id) {
-        if (id == null) {
-            throw new IncorrectIdException("Параметр равен null.");
-        }
-        if (id <= 0) {
-            throw new NonExistentFilmException("Параметр должен быть положительным числом.");
-        }
     }
 }
